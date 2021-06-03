@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
+import styled from "styled-components"
+import { ThemeProvider } from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from './modules'
+import { handleSideBar } from './modules/sideBar'
+import { lightTheme, darkTheme } from './Theme'
+import GlobalStyle from './globalStyles'
+import ScrollToTop from './ScrollToTop'
+import Header from './components/common/Header'
+import Home from './pages/Home'
+import SignIn from './pages/SignIn'
+import SignUp from './pages/SignUp'
+import Activate from './pages/Activate'
 
 function App() {
+  // 상태 조회. state의 타입을 RootState로 지정해야 함
+  const open = useSelector((state: RootState) => state.sideBar.open)
+  const dispatch = useDispatch() 
+  const clickToOpen = () => {
+    dispatch(handleSideBar())
+  }
+  const [theme, setTheme] = useState('light')
+  const themeToggler = () => {
+    theme === 'light' ? setTheme('dark') : setTheme('light')
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+        <GlobalStyle />
+        <ScrollToTop />
+        <DimmedOut onClick={clickToOpen} open={open} />
+        <Header themeToggler={themeToggler} />
+        <Switch>
+          <Route exact path="/" component={SignIn} />
+          <Route path="/signup" component={SignUp} />
+          <Route exact path="/main" render={() => <Home />} />
+          <Route path="/auth/activate/:token" component={Activate} />
+        </Switch>
+      </ThemeProvider>
+    </Router>
+  )
 }
 
-export default App;
+export default App
+
+interface IProps {
+  open: boolean
+}
+
+const DimmedOut = styled.div<IProps>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: ${({ open }) => (open ? '#000000' : '#fff')};
+  opacity: ${({ open }) => (open ? '0.6' : '0')};
+  display: ${({ open }) => (open ? 'flex' : 'none')};
+  z-index: 2;
+`
