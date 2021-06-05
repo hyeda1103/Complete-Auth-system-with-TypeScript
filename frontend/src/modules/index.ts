@@ -1,9 +1,11 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux'
 import sideBar from "./sideBar";
+import { signUpReducer } from "./user"
 
 const rootReducer = combineReducers({
   sideBar,
-});
+  signUp: signUpReducer,
+})
 
 // 루트 리듀서를 내보내기
 export default rootReducer;
