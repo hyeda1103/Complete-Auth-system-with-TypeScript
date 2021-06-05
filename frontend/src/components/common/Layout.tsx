@@ -29,5 +29,4 @@ const Inner = styled.div`
   align-items: center;
   margin: 0 auto;
   padding: 4rem 0;
-  font-size: 80px;
 `
