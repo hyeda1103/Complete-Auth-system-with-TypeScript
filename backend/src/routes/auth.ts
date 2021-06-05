@@ -7,7 +7,9 @@ import { runValidation } from './../validators/index';
 
 const router = express.Router()
 
-router.post('/signup', userSignUpValidator, runValidation, signup)
+router
+    .route('/signup')
+    .post(userSignUpValidator, runValidation, signup)
 router.post('/account-activation', accountActivation)
 router.post('/signin', userSignInValidator, runValidation, signin)
 
