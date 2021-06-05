@@ -1,27 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import Layout from '../components/common/Layout'
 
 const Activate = () => {
     return (
-      <Main>
-        <Inner>계정 활성화</Inner>
-      </Main>
+      <Layout>
+        계정 활성화
+      </Layout>
     )
 }
 
 export default Activate
-
-const Main = styled.main`
-  height: 100%;
-`
-
-const Inner = styled.div`
-  width: 960px;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  padding: 4rem 0;
-  font-size: 80px;
-`
