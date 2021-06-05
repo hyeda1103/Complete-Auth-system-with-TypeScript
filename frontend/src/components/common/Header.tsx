@@ -3,7 +3,7 @@ import styled from 'styled-components'
 // 리덕스
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../../modules'
-import { handleSideBar } from '../../modules/sideBar'
+import { closeSideBar, openSideBar } from '../../modules/sideBar'
 // 메뉴 컴포넌트
 import SideBar from './SideBar'
 import Toggle from './Toggle'
@@ -17,8 +17,9 @@ const Header = ({ themeToggler }: Props) => {
   const open = useSelector((state: RootState) => state.sideBar.open)
   const dispatch = useDispatch() // 디스패치 함수를 가져옵니다
   const onClick = () => {
-    dispatch(handleSideBar())
+    open ? dispatch(closeSideBar()) : dispatch(openSideBar())
   }
+
   return (
     <>
       <Nav>
