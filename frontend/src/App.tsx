@@ -4,7 +4,7 @@ import styled from "styled-components"
 import { ThemeProvider } from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './modules'
-import { handleSideBar } from './modules/sideBar'
+import { closeSideBar } from './modules/sideBar'
 import { lightTheme, darkTheme } from './Theme'
 import GlobalStyle from './globalStyles'
 import ScrollToTop from './ScrollToTop'
@@ -19,7 +19,7 @@ function App() {
   const open = useSelector((state: RootState) => state.sideBar.open)
   const dispatch = useDispatch() 
   const clickToOpen = () => {
-    dispatch(handleSideBar())
+    dispatch(closeSideBar())
   }
   const [theme, setTheme] = useState('light')
   const themeToggler = () => {
@@ -33,9 +33,9 @@ function App() {
         <DimmedOut onClick={clickToOpen} open={open} />
         <Header themeToggler={themeToggler} />
         <Switch>
-          <Route exact path="/" component={SignIn} />
+          <Route exact path="/" component={Home} />
+          <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
-          <Route exact path="/main" render={() => <Home />} />
           <Route path="/auth/activate/:token" component={Activate} />
         </Switch>
       </ThemeProvider>
