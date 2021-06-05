@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { handleSideBar } from "../../modules/sideBar";
+import { closeSideBar } from "../../modules/sideBar";
 
 type Props = {
   open: boolean;
@@ -11,7 +11,7 @@ type Props = {
 const SideBar = ({ open }: Props) => {
   const dispatch = useDispatch(); // 디스패치 함수를 가져옵니다
   const onClick = () => {
-    dispatch(handleSideBar());
+    dispatch(closeSideBar()) ;
   };
   return (
     <Nav open={open}>
