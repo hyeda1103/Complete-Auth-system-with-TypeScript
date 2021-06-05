@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'development') {
 
 
 // middleware
-app.use('/api', authRoutes)
+app.use('/api/user', authRoutes)
 
 
 
