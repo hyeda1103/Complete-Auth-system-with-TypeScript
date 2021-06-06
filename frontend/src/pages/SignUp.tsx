@@ -36,16 +36,16 @@ const SignUp = () => {
         <Title>회원가입</Title>
         <Form>
           <FormItem>
-            <Label>이름</Label>
-            <Input onChange={handleChange('name')} type="text" value={name} />
+            <Label htmlFor="name">이름</Label>
+            <Input id="name" onChange={handleChange('name')} type="text" value={name} />
           </FormItem>
           <FormItem>
-            <Label>이메일</Label>
-            <Input onChange={handleChange('email')} type="email" value={email} />
+            <Label htmlFor="email">이메일</Label>
+            <Input id="email" onChange={handleChange('email')} type="email" value={email} />
           </FormItem>
           <FormItem>
-            <Label>비밀번호</Label>
-            <Input onChange={handleChange('password')} type="password" value={password} />
+            <Label htmlFor="password">비밀번호</Label>
+            <Input id="password" onChange={handleChange('password')} type="password" value={password} />
           </FormItem>
           {loading && <Loader />}
           {error && <Message>{error}</Message>}
