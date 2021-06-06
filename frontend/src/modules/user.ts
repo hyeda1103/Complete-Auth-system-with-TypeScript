@@ -1,5 +1,8 @@
 import axios from 'axios'
-import { Dispatch } from "redux"
+import { Action, Dispatch } from "redux"
+import { ThunkAction } from 'redux-thunk';
+import { RootState } from '.';
+
 
 // 사용자에 대한 액션 타입 만들기
 // 회원가입
@@ -205,5 +208,180 @@ export const activateReducer = (state: activateState = {}, action: activateActio
       return { loading: false, error: action.payload };
     default:
       return state;
+  }
+}
+
+// 비밀번호 재설정 요청
+const USER_PASSWORD_FORGOT_REQUEST = "user/PASSWORD_FORGOT_REQUEST" as const;
+const USER_PASSWORD_FORGOT_SUCCESS = "user/PASSWORD_FORGOT_SUCCESS" as const;
+const USER_PASSWORD_FORGOT_FAIL = "user/PASSWORD_FORGOT_FAIL" as const;
+
+// 비밀번호 재설정 요청에 대한 액션 생성함수 만들기
+export const forgotPassword = (email: any) => async (dispatch: Dispatch) => {
+  try {
+    dispatch({
+      type: USER_PASSWORD_FORGOT_REQUEST,
+    });
+
+    const { data } = await axios.put(`/api/user/forgot-password`, email);
+
+    dispatch({
+      type: USER_PASSWORD_FORGOT_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_PASSWORD_FORGOT_FAIL,
+      payload: error.response.data.error,
+    })
+  }
+};
+
+interface forgotPasswordAction {
+  type: typeof USER_PASSWORD_FORGOT_REQUEST | typeof USER_PASSWORD_FORGOT_SUCCESS | typeof USER_PASSWORD_FORGOT_FAIL
+  payload: any
+}
+
+interface forgotPasswordState {
+  loading?: boolean
+  success?: boolean
+  email?: any
+  error?: string
+}
+
+// 비밀번호 재설정에 대한 리듀서 선언
+export const forgotPasswordReducer = (state: forgotPasswordState = {}, action: forgotPasswordAction): forgotPasswordState => {
+  switch (action.type) {
+    case USER_PASSWORD_FORGOT_REQUEST:
+      return { loading: true }
+    case USER_PASSWORD_FORGOT_SUCCESS:
+      return { loading: false, success: true, email: action.payload }
+    case USER_PASSWORD_FORGOT_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+// 액션 타입
+// 비밀번호 재설정
+const USER_PASSWORD_RESET_REQUEST = "user/PASSWORD_RESET_REQUEST" as const;
+const USER_PASSWORD_RESET_SUCCESS = "user/PASSWORD_RESET_SUCCESS" as const;
+const USER_PASSWORD_RESET_FAIL = "user/PASSWORD_RESET_FAIL" as const;
+
+interface IResetInfo {
+  newPassword: string
+  resetPasswordLink: string
+}
+// 액션 생성함수 선언
+// 비밀번호 재설정
+// 새로운 비밀번호 설정에 대한 액션 생성함수 만들기
+export const resetPassword = (resetInfo: IResetInfo) => async (dispatch: Dispatch) => {
+  try {
+    dispatch({
+      type: USER_PASSWORD_RESET_REQUEST,
+    })
+
+    const { data } = await axios.put(`/api/user/reset-password`, resetInfo)
+
+    dispatch({
+      type: USER_PASSWORD_RESET_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: USER_PASSWORD_RESET_FAIL,
+      payload: error.response.data.error,
+    })
+  }
+}
+
+interface resetPasswordAction {
+  type: typeof USER_PASSWORD_RESET_REQUEST | typeof USER_PASSWORD_RESET_SUCCESS | typeof USER_PASSWORD_RESET_FAIL
+  payload: any
+}
+
+interface resetPasswordState {
+  loading?: boolean;
+  success?: boolean;
+  resetInfo?: any;
+  error?: string;
+}
+
+// 비밀번호 재설정에 대한 리듀서 선언
+export const resetPasswordReducer = (state: resetPasswordState = {}, action: resetPasswordAction): resetPasswordState => {
+  switch (action.type) {
+    case USER_PASSWORD_RESET_REQUEST:
+      return { loading: true }
+    case USER_PASSWORD_RESET_SUCCESS:
+      return { loading: false, success: true, resetInfo: action.payload }
+    case USER_PASSWORD_RESET_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+// 액션 타입
+// 회원 탈퇴
+const USER_CLOSE_ACCOUNT_REQUEST = 'user/CLOSE_ACCOUNT_REQUEST' as const
+const USER_CLOSE_ACCOUNT_SUCCESS = 'user/CLOSE_ACCOUNT_SUCCESS' as const
+const USER_CLOSE_ACCOUNT_FAIL = 'user/CLOSE_ACCOUNT_FAIL' as const
+
+// 회원탈퇴
+export const closeAccount =
+  (id: string): ThunkAction<void, RootState, unknown, Action<string>> =>
+  async (dispatch: Dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_CLOSE_ACCOUNT_REQUEST,
+      })
+
+      const {
+        signIn: { userInfo },
+      } = getState()
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+
+      const { data } = await axios.delete(`/api/user/${id}`, config)
+
+      dispatch({
+        type: USER_CLOSE_ACCOUNT_SUCCESS,
+        payload: data,
+      })
+    } catch (error) {
+      dispatch({
+        type: USER_CLOSE_ACCOUNT_FAIL,
+        payload: error.response && error.response.data.message ? error.response.data.message : error.message,
+      })
+    }
+  }
+
+interface closeAccountAction {
+  type: typeof USER_CLOSE_ACCOUNT_REQUEST | typeof USER_CLOSE_ACCOUNT_SUCCESS | typeof USER_CLOSE_ACCOUNT_FAIL,
+  payload: any
+}
+
+interface closeAccountState {
+  loading?: boolean
+  success?: boolean
+  error?: string
+}
+
+// 회원탈퇴
+export const closeAccountReducer = (state: closeAccountState = {}, action: closeAccountAction): closeAccountState => {
+  switch (action.type) {
+    case USER_CLOSE_ACCOUNT_REQUEST:
+      return { loading: true }
+    case USER_CLOSE_ACCOUNT_SUCCESS:
+      return { loading: false, success: true }
+    case USER_CLOSE_ACCOUNT_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
   }
 }
