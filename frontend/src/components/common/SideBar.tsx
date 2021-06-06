@@ -28,9 +28,9 @@ const SideBar = ({ open }: IProps) => {
     <Nav open={open}>
       {userInfo ? (
         <Fragment>
-          <NavItemNoLink onClick={onClick}>
-            {userInfo.name}의 노션
-          </NavItemNoLink>
+          <NavItem to="/profile" onClick={onClick}>
+            {userInfo.name}의 우아한 글쓰기
+          </NavItem>
           <NavItemNoLink onClick={logoutHandler}>로그아웃</NavItemNoLink>
         </Fragment>
       ) : (
