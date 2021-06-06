@@ -1,12 +1,15 @@
 import { combineReducers } from 'redux'
 import sideBar from "./sideBar";
-import { signUpReducer, signInReducer, activateReducer } from "./user"
+import { signUpReducer, signInReducer, activateReducer, forgotPasswordReducer, resetPasswordReducer, closeAccountReducer } from './user'
 
 const rootReducer = combineReducers({
   sideBar,
   signUp: signUpReducer,
   signIn: signInReducer,
-  activate: activateReducer
+  activate: activateReducer,
+  forgotPassword: forgotPasswordReducer,
+  resetPassword: resetPasswordReducer,
+  closeAccont: closeAccountReducer,
 })
 
 // 루트 리듀서를 내보내기
