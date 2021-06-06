@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux'
 import sideBar from "./sideBar";
-import { signUpReducer } from "./user"
+import { signUpReducer, signInReducer, activateReducer } from "./user"
 
 const rootReducer = combineReducers({
   sideBar,
   signUp: signUpReducer,
+  signIn: signInReducer,
+  activate: activateReducer
 })
 
 // 루트 리듀서를 내보내기
