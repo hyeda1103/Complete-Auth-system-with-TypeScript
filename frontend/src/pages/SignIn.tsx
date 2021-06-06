@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import styled from 'styled-components'
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 import Layout from './../components/common/Layout'
 import { useDispatch, useSelector } from 'react-redux'
 import { openSideBar } from '../modules/sideBar'
@@ -42,31 +42,32 @@ const SignIn: React.FunctionComponent<RouteComponentProps> = ({history, location
 
   return (
     <Layout>
-      <SignUpFormat>
+      <SignInFormat>
         <Title>로그인</Title>
         <Form>
           <FormItem>
-            <Label>이메일</Label>
-            <Input onChange={handleChange('email')} type="email" value={email} />
+            <Label htmlFor="email">이메일</Label>
+            <Input id="email" onChange={handleChange('email')} type="email" value={email} />
           </FormItem>
           <FormItem>
-            <Label>비밀번호</Label>
-            <Input onChange={handleChange('password')} type="password" value={password} />
+            <Label htmlFor="password">비밀번호</Label>
+            <Input id="password" onChange={handleChange('password')} type="password" value={password} />
           </FormItem>
           {loading && <Loader />}
           {error && <Message>{error}</Message>}
           <FormItem>
             <Button onClick={handleSubmit}>로그인</Button>
           </FormItem>
+          <ForgotPassword to="/auth/password/forgot">비밀번호를 잊으셨나요?</ForgotPassword>
         </Form>
-      </SignUpFormat>
+      </SignInFormat>
     </Layout>
   )
 }
 
 export default SignIn
 
-const SignUpFormat = styled.div`
+const SignInFormat = styled.div`
   width: 450px;
 `
 
@@ -116,4 +117,9 @@ const Button = styled.div`
     background: ${({ theme }) => theme.text};
     color: ${({ theme }) => theme.body};
   }
+`
+const ForgotPassword = styled(Link)`
+  display: block;
+  text-align: right;
+  color: #000;
 `
