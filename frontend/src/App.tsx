@@ -12,7 +12,11 @@ import Header from './components/common/Header'
 import Home from './pages/Home'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
-import Activate from './pages/Activate'
+import Activate from './pages/ActivateAccount'
+import ForgotPassword from './pages/Forgot'
+import ResetPassword from './pages/Reset'
+import CloseAccount from './pages/CloseAccount';
+import Profile from './pages/Profile';
 
 function App() {
   // 상태 조회. state의 타입을 RootState로 지정해야 함
@@ -34,9 +38,13 @@ function App() {
         <Header themeToggler={themeToggler} />
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route exact path="/profile" component={Profile} />
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
           <Route path="/auth/activate/:token" component={Activate} />
+          <Route path="/auth/password/forgot" component={ForgotPassword} />
+          <Route path="/auth/password/reset/:token" component={ResetPassword} />
+          <Route path="/close-account" component={CloseAccount} />
         </Switch>
       </ThemeProvider>
     </Router>
