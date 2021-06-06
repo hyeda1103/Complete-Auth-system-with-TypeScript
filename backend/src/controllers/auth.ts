@@ -11,32 +11,34 @@ import generateToken from './../utils/generateToken';
 export const signup = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body
 
-  // DB에 동일한 이메일주소로 가입한 사용자가 있는지 검사
-  const userExists = await UserModel.findOne({ email })
-  // 이미 동일한 이메일주소로 가입한 사용자가 있다면,
-  if (userExists) {
-    // Status Code 400
-    res.status(400).json({
-      error: '이미 동일한 이메일 주소로 가입되어 있습니다'
-    })
-  }
-  const token = jwt.sign({ name, email, password }, process.env.JWT_ACCOUNT_ACTIVATION, { expiresIn: '10m' })
+  UserModel.findOne({ email }).exec((err, user) => {
+    if (user) {
+      return res.status(400).json({
+        error: '이미 가입되어 있는 이메일 주소입니다',
+      })
+    }
 
-  const emailData = {
-    from: `${process.env.EMAIL_FROM}`, // MAKE SURE THIS EMAIL IS YOUR GMAIL FOR WHICH YOU GENERATED APP PASSWORD
-    to: email, // WHO SHOULD BE RECEIVING THIS EMAIL? IT SHOULD BE THE USER EMAIL (VALID EMAIL ADDRESS) WHO IS TRYING TO SIGNUP
-    subject: '우아한 글쓰기 계정 활성화',
-    html: `
+    const token = jwt.sign({ name, email, password }, process.env.JWT_ACCOUNT_ACTIVATION, { expiresIn: '10m' })
+
+    const emailData = {
+      from: `${process.env.EMAIL_FROM}`, // MAKE SURE THIS EMAIL IS YOUR GMAIL FOR WHICH YOU GENERATED APP PASSWORD
+      to: email, // WHO SHOULD BE RECEIVING THIS EMAIL? IT SHOULD BE THE USER EMAIL (VALID EMAIL ADDRESS) WHO IS TRYING TO SIGNUP
+      subject: '우아한 글쓰기 계정 활성화',
+      html: `
           <h1>계정 활성화를 위해 다음 링크를 클릭해주세요</h1>
           <p>${process.env.CLIENT_URL}/auth/activate/${token}</p>
           <hr />
           <p>본 메일에는 민감한 정보가 포함될 수 있습니다.</p>
           <p>${process.env.CLIENT_URL}</p>
         `,
-  }
+    }
 
-  sendEmailWithNodemailer(req, res, emailData)
+    sendEmailWithNodemailer(req, res, emailData)
+  })
+  
 })
+
+
 interface VerifiedUserType {
   id: number
   iat: number
@@ -79,30 +81,24 @@ export const accountActivation = (req: Request, res: Response) => {
 }
 
 export const signin = async (req: Request, res: Response) => {
-    const { email, password } = req.body
-    
-    const user = await UserModel.findOne({ email })
+  const { email, password } = req.body;
+  const user = await UserModel.findByEmail(email);
 
-    if (user && (await user.matchPassword(password))) {
-        res.json({
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            token: generateToken(user._id),
-        })
-    } else {
-        if (!user) {
-          return res.status(400).json({
-            error: '가입하지 않은 이메일 주소입니다',
-          })
-        }
-
-        if (user && !user.matchPassword(password)) {
-          return res.status(400).json({
-            error: '이메일 주소와 비밀번호가 일치하지 않습니다',
-          })
-        }
-    }
-    
+  if (user && (await user.matchPassword(password))) {
+    const { _id, name, email, role } = user
+    res.json({
+      _id,
+      name,
+      email,
+      role,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(401).json({
+      error: "이메일 또는 비밀번호가 올바르지 않습니다"
+    });
+  }
 }
+
+
+ 
