@@ -8,11 +8,11 @@ import { closeSideBar, openSideBar } from '../../modules/sideBar'
 import SideBar from './SideBar'
 import Toggle from './Toggle'
 
-type Props = {
-  themeToggler: () => void
+interface IProps {
+  themeToggler: () => void;
 }
 
-const Header = ({ themeToggler }: Props) => {
+const Header = ({ themeToggler }: IProps) => {
   // 상태를 조회합니다. 상태를 조회 할 때에는 state 의 타입을 RootState 로 지정해야합니다.
   const open = useSelector((state: RootState) => state.sideBar.open)
   const dispatch = useDispatch() // 디스패치 함수를 가져옵니다
