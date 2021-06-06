@@ -6,7 +6,6 @@ import { signUp } from "../modules/user"
 import { RootState } from '../modules';
 import Loader from './../components/common/Loader';
 import Message from './../components/common/Message';
-import { useEffect } from 'react';
 
 const SignUp = () => {
   const [values, setValues] = useState({
@@ -31,17 +30,10 @@ const SignUp = () => {
     dispatch(signUp(name, email, password))
   }
 
-  useEffect(() => {
-    console.log(error)
-  }, [error])
-
   return (
     <Layout>
       <SignUpFormat>
         <Title>회원가입</Title>
-        {response && <Message>{response.message}</Message>}
-        {/* {loading && <Loader />} */}
-        {error && <Message>{error}</Message>}
         <Form>
           <FormItem>
             <Label>이름</Label>
@@ -55,6 +47,9 @@ const SignUp = () => {
             <Label>비밀번호</Label>
             <Input onChange={handleChange('password')} type="password" value={password} />
           </FormItem>
+          {loading && <Loader />}
+          {error && <Message>{error}</Message>}
+          {response && <Message>{response.message}</Message>}
           <FormItem>
             <Button onClick={clickSubmit}>회원가입</Button>
           </FormItem>
