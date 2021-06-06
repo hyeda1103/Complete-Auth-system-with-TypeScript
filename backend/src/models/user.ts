@@ -10,27 +10,29 @@ interface IUser {
   resetPasswordLink: string
 }
 
-// 2. Create a Schema corresponding to the document interface.
-const userSchema = new Schema<IUser>(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-    role: String,
-    resetPasswordLink: String,
-  }
-)
-
 interface IUserDocument extends IUser, Document {
   matchPassword: (password: string) => Promise<boolean>
 }
 
 interface IUserModel extends Model<IUserDocument> {
-
+  findByEmail: (email: string) => Promise<IUserDocument>
 }
 
+
+// 2. Create a Schema corresponding to the document interface.
+const userSchema: Schema<IUserDocument> = new Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    role: String,
+    resetPasswordLink: String,
+})
 userSchema.methods.matchPassword = async function (enteredPassword: string) {
   return await bcrypt.compare(enteredPassword, this.password)
+}
+
+userSchema.statics.findByEmail = function (email: string) {
+    return this.findOne({ email })
 }
 
 userSchema.pre('save', async function (next) {
