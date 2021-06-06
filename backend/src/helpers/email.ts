@@ -21,7 +21,7 @@ export const sendEmailWithNodemailer = (req: Request, res: Response, emailData: 
     .then((info) => {
       console.log(`Message sent: ${info}`)
       return res.json({
-        message: `회원가입한 주소로 이메일이 발신되었습니다. 계정을 활성화해주세요.`,
+        message: `회원가입한 이메일 주소로 이메일이 발신되었습니다. 계정을 활성화해주세요.`,
       })
     })
     .catch((err) => console.log(`Problem sending email: ${err}`))
