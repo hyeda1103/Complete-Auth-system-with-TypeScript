@@ -151,6 +151,73 @@ export const signInReducer = (state: signInState = {}, action: signInAction):sig
   }
 }
 
+// 구글 로그인 액션 타입
+const USER_GOOGLE_SIGNIN_REQUEST = 'user/GOOGLE_SIGNIN_REQUEST' as const;
+const USER_GOOGLE_SIGNIN_SUCCESS = 'user/GOOGLE_SIGNIN_SUCCESS' as const
+const USER_GOOGLE_SIGNIN_FAIL = 'user/GOOGLE_SIGNIN_FAIL' as const
+
+// 구글 로그인 액션 생성함수 선언
+export const signInWithGoogle = (idToken: string) => async (dispatch: Dispatch) => {
+  try {
+    dispatch({
+      type: USER_GOOGLE_SIGNIN_REQUEST,
+    })
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.post(
+      "/api/user/google-signin",
+      { idToken },
+      config
+    );
+
+    dispatch({
+      type: USER_GOOGLE_SIGNIN_SUCCESS,
+      payload: data,
+    })
+
+    localStorage.setItem("userInfo", JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_GOOGLE_SIGNIN_FAIL,
+      payload: error.response.data.error,
+    })
+  }
+};
+
+interface googleSignInAction {
+  type: typeof USER_GOOGLE_SIGNIN_REQUEST | typeof USER_GOOGLE_SIGNIN_SUCCESS | typeof USER_GOOGLE_SIGNIN_FAIL | typeof USER_SIGNOUT
+  payload: any
+}
+
+interface googleSignInState {
+  loading?: boolean;
+  userInfo?: any;
+  error?: string;
+}
+
+
+// 구글 로그인
+export const googleSignInReducer = (state: googleSignInState = {}, action: googleSignInAction): googleSignInState => {
+  switch (action.type) {
+    case USER_GOOGLE_SIGNIN_REQUEST:
+      return { loading: true }
+    case USER_GOOGLE_SIGNIN_SUCCESS:
+      return { loading: false, userInfo: action.payload }
+    case USER_GOOGLE_SIGNIN_FAIL:
+      return { loading: false, error: action.payload }
+    case USER_SIGNOUT:
+      return {}
+    default:
+      return state
+  }
+};
+
+
 // 사용자에 대한 액션 타입 만들기
 // 계정 활성화
 const USER_ACTIVATE_REQUEST = "user/ACTIVATE_REQUEST" as const;
@@ -338,8 +405,11 @@ export const closeAccount =
       })
 
       const {
-        signIn: { userInfo },
+        signIn: { userInfo: userInfoWithEmail },
+        googleSignIn: { userInfo: userInfoWithGoogle }
       } = getState()
+
+      const userInfo = userInfoWithEmail || userInfoWithGoogle 
 
       const config = {
         headers: {
