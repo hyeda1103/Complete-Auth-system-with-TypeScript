@@ -22,7 +22,7 @@ interface IUserModel extends Model<IUserDocument> {
 // 2. Create a Schema corresponding to the document interface.
 const userSchema: Schema<IUserDocument> = new Schema({
     name: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, lowercase: true, required: true },
     password: { type: String, required: true },
     role: String,
     resetPasswordLink: String,
