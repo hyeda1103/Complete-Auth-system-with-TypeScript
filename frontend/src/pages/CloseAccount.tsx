@@ -14,8 +14,11 @@ const CloseAccount = ({ history }: RouteComponentProps) => {
     const userCloseAccount = useSelector((state: RootState) => state.closeAccont)
     const { loading, error, success } = userCloseAccount
 
-    const signIn = useSelector((state: RootState) => state.signIn)
-    const { userInfo } = signIn
+    const emailSignIn = useSelector((state: RootState) => state.signIn)
+    const googleSignIn = useSelector((state: RootState) => state.googleSignIn)
+    const { userInfo: userInfoWithEmail } = emailSignIn
+    const { userInfo: userInfoWithGoogle } = googleSignIn
+    const userInfo = userInfoWithEmail || userInfoWithGoogle
 
     const submitHandler = (e: FormEvent) => {
       e.preventDefault()
@@ -31,7 +34,7 @@ const CloseAccount = ({ history }: RouteComponentProps) => {
 
     return (
       <Layout>
-        <CloseAccountFormat>
+        <CloseAccountForm>
           <Form onSubmit={submitHandler}>
             <FormItem>
               <Input type="checkbox" checked={agree} id="agreement" onChange={(e) => setAgree(e.target.checked)} />
@@ -42,14 +45,14 @@ const CloseAccount = ({ history }: RouteComponentProps) => {
               회원탈퇴
             </Button>
           </Form>
-        </CloseAccountFormat>
+        </CloseAccountForm>
       </Layout>
     )
 }
 
 export default CloseAccount
 
-const CloseAccountFormat = styled.div`
+const CloseAccountForm = styled.div`
   width: 450px;
 `
 

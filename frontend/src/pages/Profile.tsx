@@ -9,22 +9,25 @@ import Layout from './../components/common/Layout';
 const Profile: React.FunctionComponent<RouteComponentProps> = ({ history, location }) => {
   const dispatch = useDispatch()
 
-  const signIn = useSelector((state: RootState) => state.signIn)
-  const { userInfo } = signIn
+  const emailSignIn = useSelector((state: RootState) => state.signIn)
+  const googleSignIn = useSelector((state: RootState) => state.googleSignIn)
+  const { userInfo: userInfoWithEmail } = emailSignIn
+  const { userInfo: userInfoWithGoogle } = googleSignIn
+  const userInfo = userInfoWithEmail || userInfoWithGoogle
 
   useEffect(() => {
     if (!userInfo) {
-      history.push('/login')
+      history.push('/signin')
     } 
   }, [dispatch, history, userInfo])
 
   return (
     <Layout>
-      <ProfileFormat>
+      <ProfileForm>
         <Title>프로필</Title>
 
         <Button to="/close-account">회원탈퇴</Button>
-      </ProfileFormat>
+      </ProfileForm>
     </Layout>
   )
 }
@@ -32,7 +35,7 @@ const Profile: React.FunctionComponent<RouteComponentProps> = ({ history, locati
 export default Profile
 
 
-const ProfileFormat = styled.div`
+const ProfileForm = styled.div`
   width: 450px;
 `
 

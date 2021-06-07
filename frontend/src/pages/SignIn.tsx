@@ -8,6 +8,8 @@ import { signIn } from '../modules/user'
 import { RootState } from '../modules'
 import Loader from './../components/common/Loader'
 import Message from './../components/common/Message'
+import Google from '../components/auth/Google';
+import Error from './../components/common/Error';
 
 const SignIn: React.FunctionComponent<RouteComponentProps> = ({history, location}) => {
   const [values, setValues] = useState({
@@ -19,8 +21,12 @@ const SignIn: React.FunctionComponent<RouteComponentProps> = ({history, location
 
   const dispatch = useDispatch()
 
-  const userSignIn = useSelector((state: RootState) => state.signIn)
-  const { loading, error, userInfo } = userSignIn
+    const emailSignIn = useSelector((state: RootState) => state.signIn)
+    const googleSignIn = useSelector((state: RootState) => state.googleSignIn)
+    const { loading, error, userInfo: userInfoWithEmail } = emailSignIn
+    const { userInfo: userInfoWithGoogle } = googleSignIn
+    const userInfo = userInfoWithEmail || userInfoWithGoogle
+
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
@@ -42,7 +48,7 @@ const SignIn: React.FunctionComponent<RouteComponentProps> = ({history, location
 
   return (
     <Layout>
-      <SignInFormat>
+      <SignInForm>
         <Title>로그인</Title>
         <Form>
           <FormItem>
@@ -54,20 +60,25 @@ const SignIn: React.FunctionComponent<RouteComponentProps> = ({history, location
             <Input id="password" onChange={handleChange('password')} type="password" value={password} />
           </FormItem>
           {loading && <Loader />}
-          {error && <Message>{error}</Message>}
+          {error && <Error>{error}</Error>}
           <FormItem>
             <Button onClick={handleSubmit}>로그인</Button>
           </FormItem>
-          <ForgotPassword to="/auth/password/forgot">비밀번호를 잊으셨나요?</ForgotPassword>
+          <FormItem>
+            <ForgotPassword to="/auth/password/forgot">비밀번호를 잊으셨나요?</ForgotPassword>
+          </FormItem>
+          <FormItem>
+            <Google />
+          </FormItem>
         </Form>
-      </SignInFormat>
+      </SignInForm>
     </Layout>
   )
 }
 
 export default SignIn
 
-const SignInFormat = styled.div`
+const SignInForm = styled.div`
   width: 450px;
 `
 
@@ -83,10 +94,6 @@ const FormItem = styled.div`
   display: flex;
   flex-direction: column;
   margin: 1rem 0;
-
-  &:last-child {
-    margin: 2rem 0;
-  }
 `
 
 const Label = styled.label`
@@ -105,6 +112,7 @@ const Input = styled.input`
 
 const Button = styled.div`
   padding: 0.5rem;
+  margin-top: 1rem;
   letter-spacing: 1.4px;
   font-size: 1.25rem;
   cursor: pointer;
@@ -121,5 +129,5 @@ const Button = styled.div`
 const ForgotPassword = styled(Link)`
   display: block;
   text-align: right;
-  color: #000;
+  color: ${({ theme }) => theme.text};
 `
