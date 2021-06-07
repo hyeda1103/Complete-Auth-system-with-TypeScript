@@ -1,6 +1,6 @@
 import express from 'express'
 // import controller
-import { signup, signin, signInWithGoogle, accountActivation, forgotPassword, resetPassword, closeAccount } from '../controllers/auth'
+import { signup, signin, signInWithGoogle, accountActivation, forgotPassword, resetPassword, getProfile, updateProfile, closeAccount } from '../controllers/auth'
 // import validators
 import { userSignInValidator, userSignUpValidator, forgotPasswordValidator, resetPasswordValidator } from './../validators/auth'
 import { runValidation } from './../validators/index';
@@ -16,6 +16,8 @@ router.post('/account-activation', accountActivation)
 router.post('/signin', userSignInValidator, runValidation, signin)
 router.put('/forgot-password', forgotPasswordValidator, runValidation, forgotPassword)
 router.put('/reset-password', resetPasswordValidator, runValidation, resetPassword)
+router.route('/profile').get(protect, getProfile).put(protect, updateProfile)
 router.route('/:id').delete(protect, closeAccount)
+
 
 export { router }
