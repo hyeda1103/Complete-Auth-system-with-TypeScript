@@ -7,6 +7,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import Message from './../components/common/Message';
 import Loader from './../components/common/Loader';
 import Layout from './../components/common/Layout';
+import Error from './../components/common/Error';
 
 const ForgotPassword = ({ history }: RouteComponentProps) => {
   const [email, setEmail] = useState('')
@@ -23,28 +24,28 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
 
   return (
     <Layout>
-      <SignUpFormat>
+      <SignUpForm>
         <Title>비밀번호 재설정</Title>
         <Form onSubmit={submitHandler}>
           <FormItem>
             <Label htmlFor="email">이메일</Label>
             <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </FormItem>
-          {error && <Message>{error}</Message>}
+          {error && <Error>{error}</Error>}
           {loading && <Loader />}
           {forgotEmail && <Message>{forgotEmail.message}</Message>}
           <FormItem>
             <Button type="submit">비밀번호 재설정 링크 요청</Button>
           </FormItem>
         </Form>
-      </SignUpFormat>
+      </SignUpForm>
     </Layout>
   )
 }
 
 export default ForgotPassword
 
-const SignUpFormat = styled.div`
+const SignUpForm = styled.div`
   width: 450px;
 `
 
