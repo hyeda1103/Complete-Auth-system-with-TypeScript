@@ -16,8 +16,11 @@ const SideBar = ({ open }: IProps) => {
     dispatch(closeSideBar()) ;
   };
   
-  const userSignIn = useSelector((state: RootState) => state.signIn)
-  const { loading, error, userInfo } = userSignIn
+  const emailSignIn = useSelector((state: RootState) => state.signIn)
+  const googleSignIn = useSelector((state: RootState) => state.googleSignIn)
+  const { userInfo: userInfoWithEmail } = emailSignIn
+  const { userInfo: userInfoWithGoogle } = googleSignIn
+  const userInfo = userInfoWithEmail || userInfoWithGoogle
 
   const logoutHandler = () => {
     dispatch(signout());
