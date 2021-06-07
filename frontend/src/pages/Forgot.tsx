@@ -3,13 +3,13 @@ import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 import { forgotPassword } from './../modules/user'
 import { RootState } from '../modules'
-import { RouteComponentProps } from 'react-router-dom';
 import Message from './../components/common/Message';
 import Loader from './../components/common/Loader';
 import Layout from './../components/common/Layout';
 import Error from './../components/common/Error';
+import Meta from '../components/common/Meta'
 
-const ForgotPassword = ({ history }: RouteComponentProps) => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('')
 
   const dispatch = useDispatch()
@@ -23,23 +23,26 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
   }
 
   return (
-    <Layout>
-      <SignUpForm>
-        <Title>비밀번호 재설정</Title>
-        <Form onSubmit={submitHandler}>
-          <FormItem>
-            <Label htmlFor="email">이메일</Label>
-            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </FormItem>
-          {error && <Error>{error}</Error>}
-          {loading && <Loader />}
-          {forgotEmail && <Message>{forgotEmail.message}</Message>}
-          <FormItem>
-            <Button type="submit">비밀번호 재설정 링크 요청</Button>
-          </FormItem>
-        </Form>
-      </SignUpForm>
-    </Layout>
+    <>
+      <Meta title={`비밀번호 재설정`} />
+      <Layout>
+        <SignUpForm>
+          <Title>비밀번호 재설정</Title>
+          <Form onSubmit={submitHandler}>
+            <FormItem>
+              <Label htmlFor="email">이메일</Label>
+              <Input id="email" type="email" value={email} autoComplete="off" onChange={(e) => setEmail(e.target.value)} />
+            </FormItem>
+            {error && <Error>{error}</Error>}
+            {loading && <Loader />}
+            {forgotEmail && <Message>{forgotEmail.message}</Message>}
+            <FormItem>
+              <Button type="submit">비밀번호 재설정 링크 요청</Button>
+            </FormItem>
+          </Form>
+        </SignUpForm>
+      </Layout>
+    </>
   )
 }
 
@@ -47,6 +50,7 @@ export default ForgotPassword
 
 const SignUpForm = styled.div`
   width: 450px;
+  margin-top: -30px;
 `
 
 const Form = styled.form``
