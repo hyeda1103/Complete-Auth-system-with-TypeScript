@@ -14,9 +14,8 @@ const Activate = ({ match }: RouteComponentProps<{ token?: any}>) => {
   const [values, setValues] = useState({
     name: "",
     token: "",
-    show: true,
   });
-  const { name, token, show } = values;
+  const { name, token } = values;
 
   const dispatch = useDispatch()
 
@@ -25,11 +24,11 @@ const Activate = ({ match }: RouteComponentProps<{ token?: any}>) => {
 
   useEffect(() => {
     const token = match.params.token
-    const { name } = jwt.decode(token);
+    const { name } = jwt.decode(token)
     if (token) {
-      setValues({ ...values, name, token });
+      setValues({ ...values, name, token })
     }
-  }, []);
+  }, [match.params.token, values])
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -53,6 +52,7 @@ export default Activate
 
 const ActivateForm = styled.div`
   width: 450px;
+  margin-top: -30px;
 `
 
 const Title = styled.h1`

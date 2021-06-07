@@ -5,6 +5,8 @@ import { closeAccount, signout } from '../modules/user'
 import { RootState } from '../modules';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from "styled-components"
+import Error from './../components/common/Error';
+import Loader from './../components/common/Loader';
 
 const CloseAccount = ({ history }: RouteComponentProps) => {
     const [agree, setAgree] = useState(false)
@@ -37,13 +39,17 @@ const CloseAccount = ({ history }: RouteComponentProps) => {
         <CloseAccountForm>
           <Form onSubmit={submitHandler}>
             <FormItem>
-              <Input type="checkbox" checked={agree} id="agreement" onChange={(e) => setAgree(e.target.checked)} />
+              <Input type="checkbox" checked={agree} id="agreement" autoComplete="off" onChange={(e) => setAgree(e.target.checked)} />
               <Check />
               <Label htmlFor="agree">회원탈퇴에 대한 모든 조항을 확인하였으며 이에 동의합니다</Label>
             </FormItem>
-            <Button type="submit" disabled={!agree}>
-              회원탈퇴
-            </Button>
+            {loading && <Loader />}
+            {error && <Error>{error}</Error>}
+            <FormItem>
+              <Button type="submit" disabled={!agree}>
+                회원탈퇴
+              </Button>
+            </FormItem>
           </Form>
         </CloseAccountForm>
       </Layout>
@@ -54,6 +60,7 @@ export default CloseAccount
 
 const CloseAccountForm = styled.div`
   width: 450px;
+  margin-top: -30px;
 `
 
 const Form = styled.form``

@@ -1,6 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Layout from '../components/common/Layout';
 import Meta from '../components/common/Meta';

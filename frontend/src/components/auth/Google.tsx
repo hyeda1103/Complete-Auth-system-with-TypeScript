@@ -11,7 +11,7 @@ const Google: React.FunctionComponent<RouteComponentProps> = ({ history, locatio
   const dispatch = useDispatch()
 
   const googleSignIn = useSelector((state: RootState) => state.googleSignIn)
-  const { loading, error, userInfo } = googleSignIn
+  const { userInfo } = googleSignIn
 
   const redirect = location.search ? location.search.split('=')[1] : '/'
 

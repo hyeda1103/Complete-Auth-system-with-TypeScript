@@ -283,8 +283,12 @@ const USER_PASSWORD_FORGOT_REQUEST = "user/PASSWORD_FORGOT_REQUEST" as const;
 const USER_PASSWORD_FORGOT_SUCCESS = "user/PASSWORD_FORGOT_SUCCESS" as const;
 const USER_PASSWORD_FORGOT_FAIL = "user/PASSWORD_FORGOT_FAIL" as const;
 
+interface IEmail {
+  email: string
+}
+
 // 비밀번호 재설정 요청에 대한 액션 생성함수 만들기
-export const forgotPassword = (email: any) => async (dispatch: Dispatch) => {
+export const forgotPassword = (email: IEmail) => async (dispatch: Dispatch) => {
   try {
     dispatch({
       type: USER_PASSWORD_FORGOT_REQUEST,
@@ -426,7 +430,7 @@ export const closeAccount =
     } catch (error) {
       dispatch({
         type: USER_CLOSE_ACCOUNT_FAIL,
-        payload: error.response && error.response.data.message ? error.response.data.message : error.message,
+        payload: error.response.data.error,
       })
     }
   }
@@ -451,6 +455,160 @@ export const closeAccountReducer = (state: closeAccountState = {}, action: close
       return { loading: false, success: true }
     case USER_CLOSE_ACCOUNT_FAIL:
       return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+// 프로필 정보 액션타입
+const USER_DETAILS_REQUEST = "user/DETAILS_REQUEST" as const;
+const USER_DETAILS_SUCCESS = "user/DETAILS_SUCCESS" as const;
+const USER_DETAILS_FAIL = "user/DETAILS_FAIL" as const;
+const USER_DETAILS_RESET = "user/DETAILS_RESET" as const;
+
+// 프로필 정보 액션 생성함수
+export const getProfile =
+  (id: string): ThunkAction<void, RootState, unknown, Action<string>> =>
+  async (dispatch: Dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_DETAILS_REQUEST,
+      })
+
+      const {
+        signIn: { userInfo: userInfoWithEmail },
+        googleSignIn: { userInfo: userInfoWithGoogle },
+      } = getState()
+
+      const userInfo = userInfoWithEmail || userInfoWithGoogle
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+
+      const { data } = await axios.get(`/api/user/${id}`, config)
+
+      dispatch({
+        type: USER_DETAILS_SUCCESS,
+        payload: data,
+      })
+    } catch (error) {
+      dispatch({
+        type: USER_DETAILS_FAIL,
+        payload: error.response.data.error,
+      })
+    }
+  }
+
+interface getProfileAction {
+  type: typeof USER_DETAILS_REQUEST | typeof USER_DETAILS_SUCCESS | typeof USER_DETAILS_FAIL | typeof USER_DETAILS_RESET
+  payload: any
+}
+interface getProfileState {
+  loading?: boolean
+  success?: boolean
+  user?: any
+  error?: string
+}
+
+// 사용자에 대한 리듀서 선언
+// 프로필
+export const getProfileReducer = (state: getProfileState = { user: {} }, action: getProfileAction): getProfileState => {
+  switch (action.type) {
+    case USER_DETAILS_REQUEST:
+      return { ...state, loading: true }
+    case USER_DETAILS_SUCCESS:
+      return { loading: false, user: action.payload }
+    case USER_DETAILS_FAIL:
+      return { loading: false, error: action.payload }
+    case USER_DETAILS_RESET:
+      return { user: {} }
+    default:
+      return state
+  }
+}
+
+// 프로필 업데이트 액션 타입
+const USER_UPDATE_PROFILE_REQUEST = "user/UPDATE_PROFILE_REQUEST" as const;
+export const USER_UPDATE_PROFILE_SUCCESS = "user/UPDATE_PROFILE_SUCCESS" as const;
+export const USER_UPDATE_PROFILE_FAIL = "user/UPDATE_PROFILE_FAIL" as const;
+export const USER_UPDATE_PROFILE_RESET = "user/UPDATE_PROFILE_RESET" as const;
+
+// 프로필 업데이트 액션 생성함수 선언
+interface IUser {
+  id: string
+  name: string
+  email: string
+  password: string
+}
+
+export const updateProfile =
+  (user: IUser): ThunkAction<void, RootState, unknown, Action<string>> =>
+  async (dispatch: Dispatch, getState) => {
+    try {
+      dispatch({
+        type: USER_UPDATE_PROFILE_REQUEST,
+      })
+
+      const {
+        signIn: { userInfo: userInfoWithEmail },
+        googleSignIn: { userInfo: userInfoWithGoogle },
+      } = getState()
+
+      const userInfo = userInfoWithEmail || userInfoWithGoogle
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userInfo.token}`,
+        },
+      }
+
+      const { data } = await axios.put(`/api/user/profile`, user, config)
+
+      dispatch({
+        type: USER_UPDATE_PROFILE_SUCCESS,
+        payload: data,
+      })
+
+      dispatch({
+        type: USER_SIGNIN_SUCCESS,
+        payload: data,
+      })
+
+      localStorage.setItem('userInfo', JSON.stringify(data))
+    } catch (error) {
+      dispatch({
+        type: USER_UPDATE_PROFILE_FAIL,
+        payload: error.response.data.error,
+      })
+    }
+  }
+
+interface updateProfileAction {
+  type: typeof USER_UPDATE_PROFILE_REQUEST | typeof USER_UPDATE_PROFILE_SUCCESS | typeof USER_UPDATE_PROFILE_FAIL | typeof USER_UPDATE_PROFILE_RESET
+  payload: any
+}
+interface updateProfileState {
+  loading?: boolean
+  success?: boolean
+  userInfo?: any
+  error?: string
+}
+
+// 프로필 업데이트 리듀서 선언
+export const updateProfileReducer = (state: updateProfileState = {}, action: updateProfileAction): updateProfileState => {
+  switch (action.type) {
+    case USER_UPDATE_PROFILE_REQUEST:
+      return { loading: true }
+    case USER_UPDATE_PROFILE_SUCCESS:
+      return { loading: false, success: true, userInfo: action.payload }
+    case USER_UPDATE_PROFILE_FAIL:
+      return { loading: false, error: action.payload }
+    case USER_UPDATE_PROFILE_RESET:
+      return {}
     default:
       return state
   }

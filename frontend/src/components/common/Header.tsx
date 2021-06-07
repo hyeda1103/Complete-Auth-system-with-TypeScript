@@ -48,7 +48,7 @@ const Nav = styled.section`
   height: 60px;
   top: 0;
   left: 0;
-  background: #363537;
+  background: #22272e;
   color: #f6f5f0;
   position: fixed;
   z-index: 3;
