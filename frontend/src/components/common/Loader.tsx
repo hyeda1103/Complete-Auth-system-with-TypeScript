@@ -1,10 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-interface IProps {
-  children: string | undefined
-}
-
 const Loader = () => {
   return <MsgForm>로딩중입니다</MsgForm>
 }
