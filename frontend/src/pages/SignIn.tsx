@@ -7,9 +7,9 @@ import { openSideBar } from '../modules/sideBar'
 import { signIn } from '../modules/user'
 import { RootState } from '../modules'
 import Loader from './../components/common/Loader'
-import Message from './../components/common/Message'
 import Google from '../components/auth/Google';
 import Error from './../components/common/Error';
+import Meta from '../components/common/Meta';
 
 const SignIn: React.FunctionComponent<RouteComponentProps> = ({history, location}) => {
   const [values, setValues] = useState({
@@ -47,38 +47,48 @@ const SignIn: React.FunctionComponent<RouteComponentProps> = ({history, location
   }
 
   return (
-    <Layout>
-      <SignInForm>
-        <Title>로그인</Title>
-        <Form>
-          <FormItem>
-            <Label htmlFor="email">이메일</Label>
-            <Input id="email" onChange={handleChange('email')} type="email" value={email} />
-          </FormItem>
-          <FormItem>
-            <Label htmlFor="password">비밀번호</Label>
-            <Input id="password" onChange={handleChange('password')} type="password" value={password} />
-          </FormItem>
-          {loading && <Loader />}
-          {error && <Error>{error}</Error>}
-          <FormItem>
-            <Button onClick={handleSubmit}>로그인</Button>
-          </FormItem>
-          <FormItem>
-            <ForgotPassword to="/auth/password/forgot">비밀번호를 잊으셨나요?</ForgotPassword>
-          </FormItem>
-          <FormItem>
-            <Google />
-          </FormItem>
-        </Form>
-      </SignInForm>
-    </Layout>
+    <>
+      <Meta title={`로그인`} />
+      <Layout>
+        <SignInForm>
+          <Title>로그인</Title>
+          <Form>
+            <FormItem>
+              <Label htmlFor="email">이메일</Label>
+              <Input id="email" onChange={handleChange('email')} type="email" autoComplete="off" value={email} />
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="password">비밀번호</Label>
+              <Input id="password" onChange={handleChange('password')} type="password" autoComplete="off" value={password} />
+            </FormItem>
+            {loading && <Loader />}
+            {error && <Error>{error}</Error>}
+            <FormItem>
+              <Button type="submit" onClick={handleSubmit}>
+                로그인
+              </Button>
+            </FormItem>
+            <FormItem>
+              <ForgotPassword to="/auth/password/forgot">비밀번호를 잊으셨나요?</ForgotPassword>
+            </FormItem>
+            <DividerBlock>
+              <OR>또는</OR>
+              <Divider />
+            </DividerBlock>
+            <FormItem>
+              <Google />
+            </FormItem>
+          </Form>
+        </SignInForm>
+      </Layout>
+    </>
   )
 }
 
 export default SignIn
 
 const SignInForm = styled.div`
+  margin-top: -30px;
   width: 450px;
 `
 
@@ -110,7 +120,7 @@ const Input = styled.input`
   border-radius: 5px;
 `
 
-const Button = styled.div`
+const Button = styled.button`
   padding: 0.5rem;
   margin-top: 1rem;
   letter-spacing: 1.4px;
@@ -130,4 +140,24 @@ const ForgotPassword = styled(Link)`
   display: block;
   text-align: right;
   color: ${({ theme }) => theme.text};
+`
+
+const DividerBlock = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+`
+
+const Divider = styled.hr`
+  position: absolute;
+  width: 450px;
+`
+
+const OR = styled.span`
+  background: ${({ theme }) => theme.body};
+  position: absolute;
+  width: 50px;
+  text-align: center;
+  z-index: 2;
 `

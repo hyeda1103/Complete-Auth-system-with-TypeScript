@@ -7,6 +7,7 @@ import { RootState } from '../modules';
 import Loader from './../components/common/Loader';
 import Message from './../components/common/Message';
 import Error from './../components/common/Error';
+import Meta from '../components/common/Meta';
 
 const SignUp = () => {
   const [values, setValues] = useState({
@@ -32,31 +33,36 @@ const SignUp = () => {
   }
 
   return (
-    <Layout>
-      <SignUpForm>
-        <Title>회원가입</Title>
-        <Form>
-          <FormItem>
-            <Label htmlFor="name">이름</Label>
-            <Input id="name" onChange={handleChange('name')} type="text" value={name} />
-          </FormItem>
-          <FormItem>
-            <Label htmlFor="email">이메일</Label>
-            <Input id="email" onChange={handleChange('email')} type="email" value={email} />
-          </FormItem>
-          <FormItem>
-            <Label htmlFor="password">비밀번호</Label>
-            <Input id="password" onChange={handleChange('password')} type="password" value={password} />
-          </FormItem>
-          {loading && <Loader />}
-          {error && <Error>{error}</Error>}
-          {response && <Message>{response.message}</Message>}
-          <FormItem>
-            <Button onClick={clickSubmit}>회원가입</Button>
-          </FormItem>
-        </Form>
-      </SignUpForm>
-    </Layout>
+    <>
+      <Meta title={`회원가입`} />
+      <Layout>
+        <SignUpForm>
+          <Title>회원가입</Title>
+          <Form>
+            <FormItem>
+              <Label htmlFor="name">이름</Label>
+              <Input id="name" onChange={handleChange('name')} type="text" autoComplete="off" value={name} />
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="email">이메일</Label>
+              <Input id="email" onChange={handleChange('email')} type="email" autoComplete="off" value={email} />
+            </FormItem>
+            <FormItem>
+              <Label htmlFor="password">비밀번호</Label>
+              <Input id="password" onChange={handleChange('password')} type="password" autoComplete="off" value={password} />
+            </FormItem>
+            {loading && <Loader />}
+            {error && <Error>{error}</Error>}
+            {response && <Message>{response.message}</Message>}
+            <FormItem>
+              <Button type="submit" onClick={clickSubmit}>
+                회원가입
+              </Button>
+            </FormItem>
+          </Form>
+        </SignUpForm>
+      </Layout>
+    </>
   )
 }
 
@@ -64,6 +70,7 @@ export default SignUp
 
 const SignUpForm = styled.div`
   width: 450px;
+  margin-top: -30px;
 `
 
 const Title = styled.h1`
@@ -100,7 +107,7 @@ const Input = styled.input`
   border-radius: 5px;
 `
 
-const Button = styled.div`
+const Button = styled.button`
   padding: 0.5rem;
   margin-top: 1rem;
   letter-spacing: 1.4px;
