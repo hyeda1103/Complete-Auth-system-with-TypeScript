@@ -121,7 +121,7 @@ export const signInWithGoogle = async (req: Request, res: Response) => {
     if (response.getPayload() && response.getPayload()?.email_verified) {
       const email = response.getPayload()?.email
       const name = response.getPayload()?.name
-      console.log(email)
+
       UserModel.findOne({ email }).exec((err, user) => {
         if (user) {
           const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
@@ -249,6 +249,52 @@ export const resetPassword = (req: Request, res: Response) => {
     })
   }
 }
+
+// @desc    Get user profile
+// @route   GET /api/user/profile
+// @access  Private
+export const getProfile = asyncHandler(async (req: any, res: Response) => {
+  const user = await UserModel.findById(req.user._id);
+  if (user) {
+    const {_id, name, email, role} = user
+    res.json({
+      _id,
+      name,
+      email,
+      role
+    });
+  } else {
+    res.status(404);
+    throw new Error("계정이 존재하지 않습니다");
+  }
+})
+
+// @desc    Update user profile
+// @route   PUT /api/user/profile
+// @access  Private
+export const updateProfile = asyncHandler(async (req: any, res: Response) => {
+  const user = await UserModel.findById(req.user._id);
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+  
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      token: generateToken(updatedUser._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error("계정이 존재하지 않습니다");
+  }
+});
 
 // @desc    Close account
 // @route   DELETE /api/user/:id
