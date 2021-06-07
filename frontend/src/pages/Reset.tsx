@@ -7,6 +7,7 @@ import Message from './../components/common/Message';
 import Loader from './../components/common/Loader';
 import { RootState } from '../modules'
 import Layout from './../components/common/Layout';
+import Error from './../components/common/Error';
 var jwt = require("jsonwebtoken")
 
 const Reset = ({ match }: RouteComponentProps<{ token?: any }>) => {
@@ -41,28 +42,28 @@ const Reset = ({ match }: RouteComponentProps<{ token?: any }>) => {
 
   return (
     <Layout>
-      <ResetFormat>
+      <ResetForm>
         <Title>{name}님, 반가워요! 새로운 비밀번호를 입력하여 비밀번호 재설정을 완료해주세요.</Title>
         <Form>
           <FormItem>
             <Label htmlFor="password">새로운 비밀번호</Label>
             <Input id="password" type="password" value={newPassword} placeholder="새로운 비밀번호를 입력하세요" onChange={handleChange} required />
           </FormItem>
-          {error && <Message>{error}</Message>}
+          {error && <Error>{error}</Error>}
           {resetInfo && <Message>{resetInfo.message}</Message>}
           {loading && <Loader />}
           <FormItem>
             <Button onClick={handleSubmit}>비밀번호 재설정</Button>
           </FormItem>
         </Form>
-      </ResetFormat>
+      </ResetForm>
     </Layout>
   )
 }
 
 export default Reset
 
-const ResetFormat = styled.div`
+const ResetForm = styled.div`
   width: 450px;
 `
 
