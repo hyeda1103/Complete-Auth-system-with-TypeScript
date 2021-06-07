@@ -21,11 +21,11 @@ interface IUserModel extends Model<IUserDocument> {
 
 // 2. Create a Schema corresponding to the document interface.
 const userSchema: Schema<IUserDocument> = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, lowercase: true, required: true },
-    password: { type: String, required: true },
-    role: String,
-    resetPasswordLink: String,
+  name: { type: String, required: true },
+  email: { type: String, lowercase: true, required: true },
+  password: { type: String, required: true },
+  role: { type: String, default: '글쓴이' },
+  resetPasswordLink: String,
 })
 userSchema.methods.matchPassword = async function (enteredPassword: string) {
   return await bcrypt.compare(enteredPassword, this.password)
