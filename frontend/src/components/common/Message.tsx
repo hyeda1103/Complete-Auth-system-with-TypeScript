@@ -7,15 +7,15 @@ interface IProps {
 
 const Message = ({ children }: IProps) => {
   return (
-    <MsgBlock>
+    <MsgForm>
       {children}
-    </MsgBlock>
+    </MsgForm>
   )
 }
 
 export default Message
 
-const MsgBlock = styled.div`
+const MsgForm = styled.div`
   border: 1px solid ${({ theme }) => theme.text};
   border-radius: 5px;
   padding: 0.5rem;

@@ -6,12 +6,12 @@ interface IProps {
 }
 
 const Loader = () => {
-  return <MsgBlock>로딩중입니다</MsgBlock>
+  return <MsgForm>로딩중입니다</MsgForm>
 }
 
 export default Loader
 
-const MsgBlock = styled.div`
+const MsgForm = styled.div`
   border: 1px solid ${({ theme }) => theme.text};
   border-radius: 5px;
   padding: 0.5rem;
