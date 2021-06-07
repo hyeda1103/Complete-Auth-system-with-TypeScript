@@ -1,17 +1,15 @@
 import { DefaultTheme } from "styled-components";
 
 export const lightTheme: DefaultTheme = {
-  body: "#FAFAFA",
-  text: "#363537",
-  background: "#FAFAFA",
-  mode: "light",
-  tableBorder: "#36353750",
-};
+  body: '#FAFAFA',
+  text: '#22272E',
+  background: '#FAFAFA',
+  mode: 'light',
+}
 
 export const darkTheme: DefaultTheme = {
-  body: "#363537",
-  text: "#FAFAFA",
-  background: "#999",
-  mode: "dark",
-  tableBorder: "#FAFAFA50",
-};
+  body: '#22272E',
+  text: '#FAFAFA',
+  background: '#999',
+  mode: 'dark',
+}
