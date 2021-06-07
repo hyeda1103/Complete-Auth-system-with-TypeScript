@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom'
-import styled from "styled-components"
 import { ThemeProvider } from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from './modules'
-import { closeSideBar } from './modules/sideBar'
+import { turnOn, turnOff } from './modules/theme'
 import { lightTheme, darkTheme } from './Theme'
 import GlobalStyle from './globalStyles'
 import ScrollToTop from './ScrollToTop'
@@ -18,23 +17,19 @@ import ResetPassword from './pages/Reset'
 import CloseAccount from './pages/CloseAccount';
 import Profile from './pages/Profile';
 
+
 function App() {
-  // 상태 조회. state의 타입을 RootState로 지정해야 함
-  const open = useSelector((state: RootState) => state.sideBar.open)
   const dispatch = useDispatch() 
-  const clickToOpen = () => {
-    dispatch(closeSideBar())
-  }
-  const [theme, setTheme] = useState('light')
+
+  const lightOn = useSelector((state: RootState) => state.switchTheme.lightOn)
   const themeToggler = () => {
-    theme === 'light' ? setTheme('dark') : setTheme('light')
+    lightOn ? dispatch(turnOff()) : dispatch(turnOn())
   }
   return (
     <Router>
-      <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+      <ThemeProvider theme={lightOn ? lightTheme : darkTheme}>
         <GlobalStyle />
         <ScrollToTop />
-        <DimmedOut onClick={clickToOpen} open={open} />
         <Header themeToggler={themeToggler} />
         <Switch>
           <Route exact path="/" component={Home} />
@@ -52,19 +47,3 @@ function App() {
 }
 
 export default App
-
-interface IProps {
-  open: boolean
-}
-
-const DimmedOut = styled.div<IProps>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: ${({ open }) => (open ? '#000000' : '#fff')};
-  opacity: ${({ open }) => (open ? '0.6' : '0')};
-  display: ${({ open }) => (open ? 'flex' : 'none')};
-  z-index: 2;
-`
