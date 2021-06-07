@@ -1,32 +1,34 @@
 import React, { ReactChild, ReactChildren } from 'react'
 import styled from "styled-components"
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../../modules'
 interface IProps {
     children: ReactChild | ReactChildren
 }
 
-const Layout = ({children}: IProps) => {
+const Layout = ({ children }: IProps) => {
+    const open = useSelector((state: RootState) => state.sideBar.open)
+
     return (
-        <Main>
-            <Inner>
-                {children}
-            </Inner>
+        <Main open={open}>
+            {children}
         </Main>
     )
 }
 
 export default Layout
 
-const Main = styled.main`
-  height: 100%;
-`
+interface IProps {
+    open?: boolean
+}
 
-const Inner = styled.div`
-  width: 960px;
+const Main = styled.main<IProps>`
+  width: ${({ open }) => (open ? 'calc(100% - 250px)' : '100%')};
   height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin: 0 auto;
-  padding: 4rem 0;
+  justify-content: center;
+  left: ${({ open }) => (open ? '250px' : '0')};
+  position: absolute;
+  transition: .6s ease;
 `
