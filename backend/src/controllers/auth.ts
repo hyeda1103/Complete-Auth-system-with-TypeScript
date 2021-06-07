@@ -3,11 +3,12 @@ import asyncHandler from 'express-async-handler'
 import UserModel from './../models/user';
 import { sendEmailWithNodemailer } from './../helpers/email';
 import generateToken from './../utils/generateToken';
+import { OAuth2Client } from 'google-auth-library';
 var _ = require('lodash')
 var jwt = require('jsonwebtoken')
 
 // @desc    Register a new user
-// @route   POST /api/auth/signup
+// @route   POST /api/user/signup
 // @access  Public
 export const signup = asyncHandler(async (req: Request, res: Response) => {
   const { name, email, password } = req.body
@@ -46,6 +47,9 @@ interface VerifiedUserType {
   exp: number
 }
 
+// @desc    Activate account
+// @route   POST /api/user/account-activation
+// @access  Public
 export const accountActivation = (req: Request, res: Response) => {
     const { token } = req.body
 
@@ -81,6 +85,9 @@ export const accountActivation = (req: Request, res: Response) => {
     }
 }
 
+// @desc    Sign In with Email
+// @route   POST /api/user/signin
+// @access  Public
 export const signin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await UserModel.findByEmail(email);
@@ -101,6 +108,68 @@ export const signin = async (req: Request, res: Response) => {
   }
 }
 
+// @desc    Login with google
+// @route   POST /api/user/google-signin
+// @access  Public
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+export const signInWithGoogle = async (req: Request, res: Response) => {
+  const { idToken } = req.body
+  const ticket = await client.verifyIdToken({
+    idToken,
+    audience: process.env.GOOGLE_CLIENT_ID
+  }).then((response) => {
+    if (response.getPayload() && response.getPayload()?.email_verified) {
+      const email = response.getPayload()?.email
+      const name = response.getPayload()?.name
+      console.log(email)
+      UserModel.findOne({ email }).exec((err, user) => {
+        if (user) {
+          const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: "7d",
+          })
+          const { _id, email, name, role } = user
+          return res.json({
+            _id,
+            name,
+            email,
+            role,
+            token
+          })
+        } else {
+          const password = `${email}${process.env.JWT_SECRET}`
+          user = new UserModel({ name, email, password });
+          user.save((err, data) => {
+            if (err) {
+              console.log("ERROR GOOGLE LOGIN ON USER SAVE", err)
+              return res.status(400).json({
+                error: "구글 로그인에 실패하였습니다"
+              })
+            }
+            const token = jwt.sign(
+              { _id: data._id },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: "7d"
+              }
+            )
+            const { _id, email, name, role } = data
+            return res.json({
+              _id,
+              name,
+              email,
+              role,
+              token
+            })
+          })
+        }
+      })
+    }
+  })
+}
+
+// @desc    Forgot password
+// @route   PUT /api/user/forgot-password
+// @access  Public
 export const forgotPassword = async (req: Request, res: Response) => {
   const { email } = req.body
   UserModel.findOne({ email }, (err: any, user: any) => {
@@ -138,6 +207,9 @@ export const forgotPassword = async (req: Request, res: Response) => {
   })
 }
 
+// @desc    Reset password
+// @route   PUT /api/user/reset-password
+// @access  Public
 export const resetPassword = (req: Request, res: Response) => {
   const { resetPasswordLink, newPassword } = req.body
 
