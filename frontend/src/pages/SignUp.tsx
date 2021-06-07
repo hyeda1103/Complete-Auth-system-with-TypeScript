@@ -6,6 +6,7 @@ import { signUp } from "../modules/user"
 import { RootState } from '../modules';
 import Loader from './../components/common/Loader';
 import Message from './../components/common/Message';
+import Error from './../components/common/Error';
 
 const SignUp = () => {
   const [values, setValues] = useState({
@@ -32,7 +33,7 @@ const SignUp = () => {
 
   return (
     <Layout>
-      <SignUpFormat>
+      <SignUpForm>
         <Title>회원가입</Title>
         <Form>
           <FormItem>
@@ -48,20 +49,20 @@ const SignUp = () => {
             <Input id="password" onChange={handleChange('password')} type="password" value={password} />
           </FormItem>
           {loading && <Loader />}
-          {error && <Message>{error}</Message>}
+          {error && <Error>{error}</Error>}
           {response && <Message>{response.message}</Message>}
           <FormItem>
             <Button onClick={clickSubmit}>회원가입</Button>
           </FormItem>
         </Form>
-      </SignUpFormat>
+      </SignUpForm>
     </Layout>
   )
 }
 
 export default SignUp
 
-const SignUpFormat = styled.div`
+const SignUpForm = styled.div`
   width: 450px;
 `
 
@@ -101,13 +102,14 @@ const Input = styled.input`
 
 const Button = styled.div`
   padding: 0.5rem;
+  margin-top: 1rem;
   letter-spacing: 1.4px;
   font-size: 1.25rem;
   cursor: pointer;
   border: 1px solid ${({ theme }) => theme.text};
   border-radius: 5px;
   text-align: center;
-  transition: .4s ease;
+  transition: 0.4s ease;
 
   &:hover {
     background: ${({ theme }) => theme.text};

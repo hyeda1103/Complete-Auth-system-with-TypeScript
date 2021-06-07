@@ -7,6 +7,7 @@ import { activate } from "../modules/user"
 import { RootState } from '../modules';
 import Loader from '../components/common/Loader';
 import Message from '../components/common/Message';
+import Error from './../components/common/Error';
 var jwt = require("jsonwebtoken");
 
 const Activate = ({ match }: RouteComponentProps<{ token?: any}>) => {
@@ -37,20 +38,20 @@ const Activate = ({ match }: RouteComponentProps<{ token?: any}>) => {
 
   return (
     <Layout>
-      <ActivateFormat>
+      <ActivateForm>
           <Title>{name}님, 반가워요! 아래 버튼을 클릭하여 계정 활성화를 완료해주세요</Title>
           {loading && <Loader />}
-          {error && <Message>{error}</Message>}
+          {error && <Error>{error}</Error>}
           {response && <Message>{response.message}</Message>}
           <Button onClick={handleSubmit}>계정 활성화</Button>
-      </ActivateFormat>
+      </ActivateForm>
     </Layout>
   )
 }
 
 export default Activate
 
-const ActivateFormat = styled.div`
+const ActivateForm = styled.div`
   width: 450px;
 `
 
