@@ -1,11 +1,20 @@
 import { combineReducers } from 'redux'
 import sideBar from "./sideBar";
-import { signUpReducer, signInReducer, activateReducer, forgotPasswordReducer, resetPasswordReducer, closeAccountReducer } from './user'
+import {
+  signUpReducer,
+  signInReducer,
+  activateReducer,
+  forgotPasswordReducer,
+  resetPasswordReducer,
+  closeAccountReducer,
+  googleSignInReducer
+} from './user'
 
 const rootReducer = combineReducers({
   sideBar,
   signUp: signUpReducer,
   signIn: signInReducer,
+  googleSignIn: googleSignInReducer,
   activate: activateReducer,
   forgotPassword: forgotPasswordReducer,
   resetPassword: resetPasswordReducer,
