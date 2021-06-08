@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import asyncHandler from 'express-async-handler'
 import UserModel from './../models/user';
-import { sendEmailWithNodemailer } from './../helpers/email';
+import { sendEmailToActivateAccount, sendEmailToResetPassword } from './../helpers/email'
 import generateToken from './../utils/generateToken';
 import { OAuth2Client } from 'google-auth-library';
 var _ = require('lodash')
@@ -35,7 +35,7 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
         `,
     }
 
-    sendEmailWithNodemailer(req, res, emailData)
+    sendEmailToActivateAccount(req, res, emailData)
   })
   
 })
@@ -201,7 +201,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
           error: '비밀번호 재설정 요청에 대한 데이터베이스 연결이 불안정합니다',
         })
       } else {
-        sendEmailWithNodemailer(req, res, emailData)
+        sendEmailToResetPassword(req, res, emailData)
       }
     })
   })
