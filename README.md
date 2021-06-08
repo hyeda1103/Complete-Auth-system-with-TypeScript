@@ -59,7 +59,7 @@ REACT_APP_GOOGLE_CLIENT_ID=구글 로그인을 위해 발급받은 CLIENT_ID
 ### 기술
 
 - 본 프로젝트는 `TypeScript`로 작성되었습니다. 
-- 프론트 개발에 `React`, 백엔드 개발에 `Node.js`와 `Express`, 그리고 `MongoDB`를 데이터베이스로 사용하였습니다.
+- 프론트 개발에 `React`와 `Redux`, 백엔드 개발에 `Node.js`와 `Express`, 그리고 `MongoDB`를 데이터베이스로 사용하였습니다.
 
 ### 참고
 - [How to Create App-Specific Passwords in Gmail](https://www.lifewire.com/get-a-password-to-access-gmail-by-pop-imap-2-1171882)
