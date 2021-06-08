@@ -54,7 +54,7 @@ REACT_APP_GOOGLE_CLIENT_ID=구글 로그인을 위해 발급받은 CLIENT_ID
 - [x] 이메일 인증
 - [x] 비밀번호 재설정
 
-- [x] + \alpha 라이트/다크 모드
+- [x] +α 라이트/다크 모드
 
 ### 기술
 
@@ -66,3 +66,4 @@ REACT_APP_GOOGLE_CLIENT_ID=구글 로그인을 위해 발급받은 CLIENT_ID
 - [How to build Google login into a React app and Node/Express API](https://blog.prototypr.io/how-to-build-google-login-into-a-react-app-and-node-express-api-821d049ee67)
 
 ### 라이선스
+- [https://github.com/hyeda1103/Complete-Auth-system-with-TypeScript/blob/main/LICENSE](https://github.com/hyeda1103/Complete-Auth-system-with-TypeScript/blob/main/LICENSE)
