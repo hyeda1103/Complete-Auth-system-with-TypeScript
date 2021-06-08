@@ -28,7 +28,7 @@ const Reset = ({ match }: RouteComponentProps<{ token?: any }>) => {
     if (token) {
       setValues({ ...values, name, token })
     }
-  }, [match.params.token, values])
+  }, [])
 
   const { name, token, newPassword } = values
 
