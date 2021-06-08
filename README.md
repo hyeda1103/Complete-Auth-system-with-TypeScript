@@ -2,26 +2,26 @@
 
 > MERN 스택과 타입스크립트로 쓴 회원 인증 시스템입니다 + 라이트/다크 모드
 
-- [일반 정보](#일반-정보)
 - [설정](#설정)
 - [주요 기능](#주요-기능)
 - [기술](#기술)
 - [참고](#참고)
 - [라이선스](#라이선스)
 
-### 일반 정보
-
-- 친구들끼리 공유할 수 있는 미니 문서 에디터를 만들어 봅니다.
-- 본 프로젝트는 우아한 테크러닝 4기(2021-06-01 ~ 2021-06-30)와 함께 합니다.
-
 ### 설정
 
-다음과 같이 `yarn`을 사용하여 프로젝트를 실행할 수 있습니다:
+다음과 같이 `yarn`을 사용하여 로컬 환경에서 프로젝트를 실행할 수 있습니다:
 
 ```
-$ cd ../complete-auth-system-with-typescript
+$ cd ../complete-auth-system-with-typescript/frontend
 $ yarn
 $ yarn start
+```
+
+```
+$ cd ../complete-auth-system-with-typescript/backend
+$ yarn
+$ yarn dev
 ```
 
 프로젝트의 백엔드에서 설정해야 하는 환경 변수(`.env`)는 다음과 같습니다:
